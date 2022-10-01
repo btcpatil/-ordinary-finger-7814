@@ -3,6 +3,7 @@ package com.miniProject.dao;
 import java.util.List;
 
 import com.miniProject.bean.Customer;
+import com.miniProject.bean.MoneyTransfer;
 import com.miniProject.exception.CustomerException;
 
 public interface AccountantDao {
@@ -17,5 +18,7 @@ public interface AccountantDao {
 	
 	public List<Customer> getallCustomer() throws CustomerException;
 	
-	public String transferAmount(int amount, String reci_acc, String sender_acc)throws CustomerException;
+	public String transferAmount(MoneyTransfer moneyTransfer)throws CustomerException;
+	
+	public List<MoneyTransfer> trasactionHistory(int accountNo) throws CustomerException;
 }

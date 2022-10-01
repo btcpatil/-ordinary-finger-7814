@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.util.Scanner;
 
 import com.miniProject.Util.DBUtil;
+import com.miniProject.usecases.CreateNewAccount;
+import com.miniProject.usecases.DeleteAccount;
+import com.miniProject.usecases.TransactionHistory;
+import com.miniProject.usecases.TransferMoney;
 
 public class LoginCustomer {
 
@@ -33,6 +37,27 @@ public static void customerLogin() {
 	  if(rs.next()) {
 		  System.out.println("Login successfull");
 		  
+		  System.out.println("Choose the option of perfrom the below metioned operations");
+		  System.out.println("1. Transfer Money");
+		  System.out.println("2. Transaction history");
+		  
+		  System.out.println("********************************************");
+		  
+		  Scanner input = new Scanner(System.in);
+			
+		  int i = input.nextInt();
+			
+		  switch (i) {
+		  
+		  case 1: TransferMoney.main(null);
+		  break;
+			
+		  case 2: TransactionHistory.main(null);
+		  break;
+		  
+		  default: System.out.println("Invalid input");
+			
+		  }
 		  
 	  }else {
 		  System.out.println("Invalid username or password");

@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.miniProject.Util.DBUtil;
 import com.miniProject.bean.Customer;
+import com.miniProject.bean.MoneyTransfer;
 import com.miniProject.exception.CustomerException;
 
 public class AccountantDaoImpl implements AccountantDao{
@@ -190,12 +191,96 @@ public class AccountantDaoImpl implements AccountantDao{
 	}
 
 	@Override
-	public String transferAmount(int amount, String reci_acc, String sender_acc) throws CustomerException {
-		// TODO Auto-generated method stub
-		return null;
+	public String transferAmount(MoneyTransfer moneyTransfer) throws CustomerException {
+		
+		String message = "Transcation failed";
+		
+       try(Connection conn = DBUtil.provideConnection()) {
+			
+			PreparedStatement ps = conn.prepareStatement("select total_bal from customer where account_no = ?");
+			
+			ps.setInt(1, moneyTransfer.getSender_acc());
+			
+		    ResultSet rs = ps.executeQuery();
+		    
+		    if(rs.next()) {
+		    	int balance = rs.getInt("total_bal");
+		    	if(balance >= moneyTransfer.getAmount()) {
+		    		
+		    		PreparedStatement ps2 = conn.prepareStatement("update customer set total_bal = total_bal-? where account_no = ? ");
+		    		
+		    		ps2.setInt(1, moneyTransfer.getAmount());
+		    		ps2.setInt(2, moneyTransfer.getSender_acc());
+		    		
+		    		PreparedStatement ps1 = conn.prepareStatement("insert into transactions values(?,?,?,?) ");
+		    		
+		    		ps1.setInt(1, moneyTransfer.getSender_acc());
+		    		ps1.setInt(2, moneyTransfer.getReciver_acc());
+		    		ps1.setInt(3, moneyTransfer.getAmount());
+		    		ps1.setString(4, moneyTransfer.getDate());
+		    		
+		    		int x = ps1.executeUpdate();
+		    		
+		    		if(x>0) {
+		    			message = "Transcation successful";
+		    		}
+		    		
+		    		
+		    	}else {
+		    		throw new CustomerException("Insufficent balance");
+		    	}
+		    }else {
+		    	throw new CustomerException("account doesn't exists");
+		    }
+		   
+		    
+			
+		} catch (SQLException e) {
+			throw new CustomerException(e.getMessage());
+		}
+		
+		return message;
+		
 	}
 
+	@Override
+	public List<MoneyTransfer> trasactionHistory(int accountNo) throws CustomerException {
 	
-	
+		List<MoneyTransfer> list = new ArrayList<>();
+		
+	    try(Connection conn = DBUtil.provideConnection()) {
+				
+				PreparedStatement ps = conn.prepareStatement("select * from transactions ");
+				
+				
+				
+			    ResultSet rs = ps.executeQuery();
+			    
+			    while(rs.next()) {
+			    	int send = rs.getInt("sender_acc");
+			    	int recive = rs.getInt("reciver_acc");
+			    	int amount = rs.getInt("amount");
+			    	String date = rs.getString("transfer_date");
+			    	
+			    	MoneyTransfer mt = new MoneyTransfer(amount, send, recive, date);
+			    	
+			    	if(send == accountNo) {
+			    		list.add(mt);
+			    	}
+			    	
+			    	
+			    }
+			    
+				
+			} catch (SQLException e) {
+				throw new CustomerException(e.getMessage());
+			}
+	    
+	       if(list.size()==0) {
+	    	   throw new CustomerException("No transaction found :(");
+	       }
+
+		return list;
+	}
 
 }
