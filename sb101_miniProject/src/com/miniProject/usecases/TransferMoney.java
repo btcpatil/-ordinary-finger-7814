@@ -41,6 +41,8 @@ public class TransferMoney {
 				System.out.println(e.getMessage());
 			}
 
+			System.out.println("*************************************");
+			System.out.println();
 	}
 
 }

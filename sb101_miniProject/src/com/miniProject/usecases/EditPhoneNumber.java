@@ -11,7 +11,7 @@ public class EditPhoneNumber {
 		
        Scanner sc = new Scanner(System.in);
 		
-		System.out.println("Enter the customer phone number");
+		System.out.println("Enter the new phone number");
 		String phone = sc.nextLine();
 		
 		System.out.println("Enter the customer account number");
@@ -22,6 +22,9 @@ public class EditPhoneNumber {
 		String result = accDao.editphoneNumber(phone, account);
 		
 		System.out.println(result);
+		
+		System.out.println("*************************************");
+		System.out.println();
 		
 
 	}

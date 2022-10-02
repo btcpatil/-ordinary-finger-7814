@@ -23,6 +23,9 @@ public class GetAllCustomers {
 			
 			System.out.println(e.getMessage());
 		}
+		
+		System.out.println("*************************************");
+		System.out.println();
 
 	}
 

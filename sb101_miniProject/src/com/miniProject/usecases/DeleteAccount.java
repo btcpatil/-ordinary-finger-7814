@@ -19,6 +19,9 @@ public class DeleteAccount {
 		String result = accDao.removeAccount(account);
 
 		System.out.println(result);
+		
+		System.out.println("*************************************");
+		System.out.println();
 	}
 
 }

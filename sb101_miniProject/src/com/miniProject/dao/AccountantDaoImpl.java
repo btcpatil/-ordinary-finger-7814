@@ -148,7 +148,7 @@ public class AccountantDaoImpl implements AccountantDao{
 		
 		List<Customer> list = new ArrayList<>();
 		
-    try(Connection conn = DBUtil.provideConnection()) {
+       try(Connection conn = DBUtil.provideConnection()) {
 			
 			PreparedStatement ps = conn.prepareStatement("select * from customer ");
 			
@@ -211,6 +211,12 @@ public class AccountantDaoImpl implements AccountantDao{
 		    		
 		    		ps2.setInt(1, moneyTransfer.getAmount());
 		    		ps2.setInt(2, moneyTransfer.getSender_acc());
+		    		
+		    		int t = ps2.executeUpdate();
+		    		
+		    		if(t>0) {
+		    			System.out.println(moneyTransfer.getAmount() + " is debited from your account");
+		    		}
 		    		
 		    		PreparedStatement ps1 = conn.prepareStatement("insert into transactions values(?,?,?,?) ");
 		    		
